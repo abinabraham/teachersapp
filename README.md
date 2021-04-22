@@ -69,7 +69,7 @@ You will get three menus
 
 ## Teachers List
 ## Subjects
-## importer
+## Importer
 
 
 You will redirect to Home page as TEACHERS LIST
