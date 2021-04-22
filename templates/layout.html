@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+    <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{%static "css/all.min.css" %}">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="{%static "css/icheck-bootstrap.min.css" %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{%static "css/adminlte.min.css" %}">
+{% endblock %}
+
+{% block layout %}  
+    {% block header %}{% endblock %}
+    {% block content %}{% endblock %}
+    {% block footer %}{% endblock %}
+
+{% endblock %}
+
+{# Local scripts #}
+{% block scripts %}
+    {{ block.super }}
+    <!-- Twitter Bootstrap -->
+    <script src="{% static "js/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
+{% endblock %}
+
+{% block extrascripts %}
+    {{ block.super }}
+{% endblock %}
+
+{% block onbodyload %}
+    {{ block.super }}
+{% endblock %}

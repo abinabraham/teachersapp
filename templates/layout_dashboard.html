@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+    <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static "css/all.min.css" %}">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="{% static "css/icheck-bootstrap.min.css" %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static "css/adminlte.min.css" %}">
+{% endblock %}
+{% block extrastyles %}
+ {{ block.super }}
+ <style>
+.error {
+      color: red;
+   }
+   </style>
+{% endblock %}
+
+{% block layout %}   
+   {% block header %}
+	   		{% include "common/navbar.html" %}
+	  <!-- Main Sidebar Container -->
+	  <aside class="main-sidebar sidebar-dark-primary elevation-4">		    
+		    {% include "common/sidebar.html" %}
+		    {% include "common/navigation.html" %}
+	    <!-- /.sidebar -->
+	  </aside>
+   {% endblock %}
+   {% block content %}{% endblock %}    
+   {% block footer %}
+     {% include "common/footer.html" %}
+   {% endblock %}
+	{% endblock %}
+
+{# Local scripts #}
+{% block scripts %}
+    {{ block.super }}
+    <!-- Twitter Bootstrap -->
+    <script src="{% static "js/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
+{% endblock %}
+
+{% block extrascripts %}
+    {{ block.super }}
+    <!-- CDN for jquery validator -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+    
+{% endblock %}
+
+{% block onbodyload %}
+    <script type="text/javascript">
+      // Wait for the DOM to be ready
+      {% if filter_lname %}
+      var all_filter_btns = $(".filter_tag button");
+      for(i=0; i< all_filter_btns.length; i++){
+        if(all_filter_btns.eq(i).html() == "{{filter_lname}}"){
+          $('.filter_tag button').removeClass('btn-primary active');
+          all_filter_btns.eq(i).addClass("btn-primary active"); 
+        }
+      }
+      {% endif %}
+
+      $(function() {
+        $("form[id='subject_form']").validate({
+          // Specify validation rules
+          rules: {
+            name: "required",
+            code: "required",
+          },
+          // Specify validation error messages
+          messages: {
+            name: "Please enter subject name",
+            code: "Please enter code",
+            
+          },
+          // in the "action" attribute of the form when valid
+          submitHandler: function(form) {
+            form.submit();
+          }
+        });
+        
+
+        $("form[id='teacher_form']").validate({
+          // Specify validation rules
+          rules: {
+            first_name: "required",
+            last_name: "required",
+            email: "required",
+            room_number:"required",
+            subjects: {
+                maxlength: 5
+            }
+          },
+          // Specify validation error messages
+          messages: {
+            first_name: "Please enter firstname",
+            last_name: "Please enter lastname",
+            email: "Please enter email",
+            room_number:"Please enter room_number",
+            subjects: {
+                maxlength: 'Please choose maximum 5 subjects.'
+            }
+
+            
+          },
+          // in the "action" attribute of the form when valid
+          submitHandler: function(form) {
+            form.submit();
+          }
+        });
+
+        $("form[id='importer_form']").validate({
+          // Specify validation rules
+          rules: {
+            file: "required",
+          },
+          // Specify validation error messages
+          messages: {
+            file: "Please import a file (CSV)."
+
+            
+          },
+          // in the "action" attribute of the form when valid
+          submitHandler: function(form) {
+            form.submit();
+          }
+        });
+
+    
+      });
+
+
+      // filter by last letter of teacher
+    $('.filter_tag button').click(function() {  
+        $('.filter_tag button').removeClass('btn-primary active');
+        $(this).addClass("btn-primary active"); 
+        $("#lnameId").val($(this).text());
+        $('#filterForm').submit();
+
+    });
+
+    $('#id_subject_filter').on('change', function() {
+      $('#filterForm').submit();
+    });
+
+
+
+    </script>
+{% endblock %}

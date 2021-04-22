@@ -1,0 +1,211 @@
+{% extends "layout_dashboard.html" %}
+{% load static %}
+{% load i18n %}
+{% block title %}
+{% trans 'Dashboard' %} | {% trans 'HOME' %}  {{ block.super }}
+{% endblock %}
+{% block body_class %}hold-transition sidebar-mini{% endblock %}
+{% block layout %} 
+<div class="wrapper">
+   <!-- Header, Logo -->
+   {% block header %}
+   {{ block.super }}
+   <!-- /.login-logo -->
+   {% endblock %}
+   {% block content %}
+   <!-- Content Wrapper. Contains page content -->
+   <div class="content-wrapper">
+      {% include "common/breadcrumb.html" %}
+      <!-- Main content -->
+      <div class="content">
+         <div class="container-fluid">
+            {% if messages %}
+            <div class="row">
+               <div class="col-md-12">
+                  {% for message in messages %}
+                  <div class="alert alert-{% if message.tags == "error" %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                  {{ message }}
+               </div>
+               {% endfor %}
+            </div>
+         </div>
+         {% endif %}
+
+         <form method="GET" action="" id="filterForm">
+         <div class="row">
+            <div class="col-12">
+               <!-- Custom Tabs -->
+               <div class="card">
+                  <div class="card-header d-flex p-0">
+                     <ul class="nav nav-pills ml-auto p-2">
+                        <li class="nav-item" style="margin-right: 10px;">
+                           <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-subject">
+                           Create Subject
+                           </button>
+                        </li>
+                        <li class="nav-item" style="margin-right: 10px;">
+                           <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modal-teacher">
+                           Add teacher
+                           </button>
+                        </li>
+                        <li class="nav-item dropdown">
+                           <select class="form-control" name="subject_filter" id="id_subject_filter">
+                              <option value="">Choose subject for filter</option>
+                              {% for sub in subject_list %}
+                              <option value="{{ sub.code }}" {% ifequal subject_filter sub.code %}selected{% endifequal %}>{{ sub.code }}</option>
+                              {% endfor %}
+                           </select>
+                           <input type="hidden" id="lnameId" name="filter_lname" value="">
+                        </li>
+                     </ul>
+                  </div>
+                  <!-- /.card-header -->
+                  
+
+                  <div class="card-body">
+                     <div class="tab-content">
+                        <div class="tab-pane active" id="tab_1">
+                          {% include "dashboard/filter_template.html" %}
+                           
+                        </div>
+                     </div>
+                     <!-- /.tab-content -->
+                  </div>
+                  <!-- /.card-body -->
+               </div>
+               <!-- ./card -->
+            </div>
+            <!-- /.col -->
+         </div>
+         <!-- /.row -->
+          </form>
+
+
+         <div class="row">
+            <!-- /.col -->
+            {% if teachers_list %}
+            {% for teacher in teachers_list %}
+            <div class="col-md-4">
+               <!-- Widget: user widget style 1 -->
+               <div class="card card-widget widget-user">
+                  <!-- Add the bg color to the header using any of the bg-* classes -->
+                  <div class="widget-user-header bg-info">
+                     <h3 class="widget-user-username">{{ teacher.get_full_name|safe }}</h3>
+                     <h5 class="widget-user-desc">{{ teacher.email|safe }},
+                        {% if teacher.phone_number %}, {{ teacher.phone_number|safe }}{% endif %}
+                     </h5>
+                  </div>
+                  <div class="widget-user-image">
+                    
+                     <img class="img-circle elevation-2" src="{% if teacher.profile_pic %}{{ teacher.profile_pic.url }}
+                                            {% else %}{{MEDIA_URL}}avatar5.png{% endif %}" alt="{{ teacher.name|safe }} Avatar">
+                  </div>
+                  <div class="card-footer">
+                     <div class="row">
+                        <div class="col-sm-4 border-right">
+                           <div class="description-block">
+                              <h5 class="description-header">{{ teacher.subjects.all.count }}</h5>
+                              <span class="description-text">SUBJECTS</span>
+                           </div>
+                           <!-- /.description-block -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-sm-4 border-right">
+                           <div class="description-block">
+                              <h5 class="description-header">{{ teacher.date_joined }}</h5>
+                              <span class="description-text">DATE OF JOINED</span>
+                           </div>
+                           <!-- /.description-block -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-sm-4">
+                           <div class="description-block">
+                              <a href="{% url 'dashboard:profile' teacher.id %}" class="btn btn-block btn-outline-success btn-sm">PROFILE</a>
+                           </div>
+                           <!-- /.description-block -->
+                        </div>
+                        <!-- /.col -->
+                     </div>
+                     <!-- /.row -->
+                  </div>
+               </div>
+               <!-- /.widget-user -->
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="col-md-4">
+               <div class="callout callout-warning">
+                  <h5>No teachers added yet.</h5>
+               </div>
+            </div>
+            {% endif %}
+            <!-- /.col -->
+         </div>
+      </div>
+      <!-- /.container-fluid -->
+   </div>
+   <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+<!-- /.subject Modal starts here-->
+<div class="modal fade" id="modal-subject">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h4 class="modal-title">Create subject !</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <form id="subject_form" action="{{ request.get_full_path }}" method="post" encytpe="multipart/form-data">
+            {% csrf_token %}
+            <div class="modal-body">   
+               {% include "common/forms.html" with form=subject_form %}
+            </div>
+            <div class="modal-footer justify-content-between">
+               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+               <button  name="subject_submit" type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+            "
+         </form>
+      </div>
+      <!-- /.subject modal-content -->
+   </div>
+   <!-- /.modal-dialog -->
+</div>
+</div>
+<!-- /.modal -->
+<!-- /.Teacher Modal starts here-->
+<div class="modal fade" id="modal-teacher">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h4 class="modal-title">Add teacher info !</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <form enctype="multipart/form-data" id="teacher_form" action="{{ request.get_full_path }}" method="POST" >
+            {% csrf_token %}
+            <div class="modal-body">   
+               {% include "common/forms.html" with form=teacher_form %}
+               <label>Hold down “Control”, or “Command” on a Mac, to select more than one.</label>
+            </div>
+            <div class="modal-footer justify-content-between">
+               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+               <button name="teacher_submit" type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+         </form>
+      </div>
+      <!-- /.subject modal-content -->
+   </div>
+   <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+{% endblock %}
+{% block footer %}
+{{ block.super }}
+{% endblock %}
+</div>
+{% endblock %}

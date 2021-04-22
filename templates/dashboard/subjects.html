@@ -1,0 +1,58 @@
+{% extends "layout_dashboard.html" %}
+{% load static %}
+{% load i18n %}
+{% block title %}
+{% trans 'Dashboard' %} | {% trans 'Subjects' %}  {{ block.super }}
+{% endblock %}
+{% block body_class %}hold-transition sidebar-mini{% endblock %}
+{% block layout %} 
+<div class="wrapper">
+   <!-- Header, Logo -->
+   {% block header %}
+   {{ block.super }}
+   <!-- /.login-logo -->
+   {% endblock %}
+   {% block content %}
+   <!-- Content Wrapper. Contains page content -->
+   <div class="content-wrapper">
+      {% include "common/breadcrumb.html" %}
+      <!-- Main content -->
+      <div class="content">
+         <div class="container-fluid">
+            <div class="row">
+               <!-- /.col -->
+               {% if subject_list %}
+               {% for subject in subject_list %}
+               <div class="col-md-3 col-sm-6 col-12">
+                  <div class="info-box">
+                     <span class="info-box-icon bg-warning"><i class="far fa-copy"></i></span>
+                     <div class="info-box-content">
+                        {% if subject.name %}<span class="info-box-text">Name: {{ subject.name|safe }}</span>{% endif %}
+                        <span class="info-box-number">Code: {{ subject.code|safe }}</span>
+                     </div>
+                     <!-- /.info-box-content -->
+                  </div>
+                  <!-- /.info-box -->
+               </div>
+               {% endfor %}
+               {% else %}
+               <div class="col-md-4">
+                  <div class="callout callout-warning">
+                     <h5>No subjects added yet.</h5>
+                  </div>
+               </div>
+               {% endif %}
+               <!-- /.col -->
+            </div>
+         </div>
+         <!-- /.container-fluid -->
+      </div>
+      <!-- /.content -->
+   </div>
+   <!-- /.content-wrapper -->
+   {% endblock %}
+   {% block footer %}
+   {{ block.super }}
+   {% endblock %}
+</div>
+{% endblock %}
