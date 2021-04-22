@@ -13,7 +13,8 @@ Create a virtual environment to install dependencies in and activate it:
 
 
 ```sh
-$ virtualenv2 --no-site-packages env
+$ python3 -m venv env
+
 $ source env/bin/activate
 ```
 
@@ -27,26 +28,47 @@ Note the (env) in front of the prompt. This indicates that this terminal session
 
 Once pip has finished downloading the dependencies:
 
+```sh
 (env)$ cd teachersapp
 (env)$ python manage.py runserver
+```
+
 And navigate to http://127.0.0.1:8000/
 
 There you can see, there are unapplied migrations
 
 Create new env file using command
+
+```sh
 (env)$ cp .env.example .env
+```
 
 And add db details, Debug status and secret key
 
 Run the command to migrate all the tables
+
+```sh
 (env)$ python manage.py migrate
+```
+
 
 You can create a superuser by command
+
+```sh
 (env)$ python manage.py createsuperuser --username="<>" --email="<>"
+```
+
 then need to set password also
 
 And navigate to http://127.0.0.1:8000/
 And login with those credentials
+
+You will get three menus
+
+## Teachers List
+## Subjects
+## importer
+
 
 You will redirect to Home page as TEACHERS LIST
 
