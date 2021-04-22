@@ -1,5 +1,7 @@
 # Teachers Directory Application
 
+An simple admin application to list and add academic details. Teachers and Subjects etc
+
 ## Setup
 The first thing to do is to clone the repository:
 
