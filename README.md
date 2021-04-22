@@ -1,6 +1,6 @@
-Teachers Directory Application
+#Teachers Directory Application
 
-Setup
+## Setup
 The first thing to do is to clone the repository:
 
 $ git clone https://github.com/abinabraham/teachersapp.git
