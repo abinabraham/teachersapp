@@ -192,8 +192,10 @@ class ImporterView(generic.TemplateView):
     def post(self, request, *args, **kwargs):
         return self.validate_form()
 
+    # need to update this function later with some generic function
     def validate_form(self):
         path = self.request.FILES.get('file')
+        sub_data = {}
         try:
             df=pd.read_csv(path,sep=',')
             teachers = []
@@ -205,11 +207,11 @@ class ImporterView(generic.TemplateView):
                     except Exception as e:
                         df.iloc[i][2] = "avatar5.png"
                     subjects = df.iloc[i][6].split(",")
-                    print("subjects",subjects)
                     for subject in subjects:
                         q_set = Subject.objects.filter(name=subject)
                         if not q_set:
                             Subject.objects.create(name=subject, code=subject)
+                    sub_data[df.iloc[i][3]] = subjects
                     if not Teacher.objects.filter(email=email_row).exists():                    
                         teachers.append(
                             Teacher(
@@ -221,12 +223,13 @@ class ImporterView(generic.TemplateView):
                             room_number=df.iloc[i][5]     
                             )
                         )
+                    
                 else:
                     pass
             try:
-                Teacher.objects.bulk_create(teachers)
+                teachers_obj = Teacher.objects.bulk_create(teachers)
                 msg = "Successfully imported data."  
-                messages.success(self.request, msg)                   
+                messages.success(self.request, msg)                
             except Exception as e:
                 msg = "Oops something happened."         
                 messages.error(self.request, msg)
@@ -234,4 +237,24 @@ class ImporterView(generic.TemplateView):
             msg = "Oops something happened. Please check the file format"         
             messages.error(self.request, msg)    
         ctx = self.get_context_data()
+        update_teacher_with_subjects(**sub_data)
         return self.render_to_response(ctx)
+
+def active_teacher_list():
+    queryset = Teacher.objects.filter(is_active=True)
+    return queryset
+
+def get_subject(code):
+    _subject = Subject.objects.filter(code=code)[0]
+    return _subject
+    
+def update_teacher_with_subjects(**kwargs):
+    teacher_list =  active_teacher_list()
+    print("=======kwargs",kwargs)
+    try:
+        for teacher in teacher_list:
+            for sub in kwargs[teacher.email]:
+                subject = get_subject(sub)
+                teacher.subjects.add(subject)
+    except Exception as e:
+        print("Logging: something error happened while updating subjects", e)
