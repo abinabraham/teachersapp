@@ -47,6 +47,8 @@ Create new env file using command
 
 And add db details, Debug status and secret key
 
+Example for DB details if db file name db.sqlite3 and in project root =  sqlite:////db.sqlite3
+
 Run the command to migrate all the tables
 
 ```sh
