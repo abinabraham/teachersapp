@@ -250,7 +250,6 @@ def get_subject(code):
     
 def update_teacher_with_subjects(**kwargs):
     teacher_list =  active_teacher_list()
-    print("=======kwargs",kwargs)
     try:
         for teacher in teacher_list:
             for sub in kwargs[teacher.email]:
@@ -258,3 +257,4 @@ def update_teacher_with_subjects(**kwargs):
                 teacher.subjects.add(subject)
     except Exception as e:
         print("Logging: something error happened while updating subjects", e)
+    return True
