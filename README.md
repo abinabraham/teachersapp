@@ -52,6 +52,7 @@ Example for DB details if db file name db.sqlite3 and in project root =  sqlite:
 Run the command to migrate all the tables
 
 ```sh
+(env)$ python manage.py makemigrations
 (env)$ python manage.py migrate
 ```
 
